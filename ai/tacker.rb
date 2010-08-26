@@ -36,10 +36,10 @@ class Tacker
   attr_reader :name, :color, :taunt, :victory_taunt, :face
   
   def move(grid)
-    corners=[1,3,7,9]
-    sides=[2,4,6,8]
     # Based on Wikipedia's method for perfect Tic Tac Toe play priority
     # http://en.wikipedia.org/wiki/Tic-tac-toe
+    @empty_side=empty_side(grid)
+    @empty_corner=empty_corner(grid)
     #1. WIN
       third_in_a_row=find_third_in_a_row(grid,"O")
       if third_in_a_row
@@ -49,6 +49,12 @@ class Tacker
       third_in_a_row=find_third_in_a_row(grid,"X")
       if third_in_a_row
         return third_in_a_row
+      end
+    #4. BLOCK OPPONENT'S FORK
+      if grid[4]=="O"
+        if (grid[0]=="X" and grid[8]=="X") or (grid[2]=="X" and grid[6]=="X")
+          return @empty_side if @empty_side
+        end 
       end
     #5. CENTER
       if grid[4]==" "
@@ -64,18 +70,28 @@ class Tacker
       elsif grid[6]=="X" and grid[2]==" "
         return 2
       end
-    #7. EMPTY CORNER (random corner)
-      corners.sort_by{rand}.each do |corner|
-        if grid[corner-1]==" "
-          return corner-1
-        end
-      end
+    #7. EMPTY CORNER
+      return @empty_corner if @empty_corner
     #8. EMPTY SIDE
-      sides.sort_by{rand}.each do |side|
-        if grid[side-1]==" "
-          return side-1
-        end
+      return @empty_side if @empty_side
+  end
+  
+  def empty_side(grid)
+    [2,4,6,8].sort_by{rand}.each do |side|
+      if grid[side-1]==" "
+        return side-1
       end
+    end
+    false
+  end
+  
+  def empty_corner(grid)
+    [1,3,7,9].sort_by{rand}.each do |corner|
+      if grid[corner-1]==" "
+        return corner-1
+      end
+    end
+    false
   end
   
   def find_third_in_a_row(grid, player="X")
