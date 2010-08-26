@@ -53,18 +53,22 @@ Enter a number between 1 and 9.
     self.display_grid()
   end
   
+  def animate_placement(player, color, index, prompt_after=false)
+    @spots[index]=colorize(player,color)
+    self.display_grid()
+    sleep(0.5)
+    @spots[index]=player
+    self.display_grid(prompt_after)
+  end
 
   def move(n)
     allowed_moves=1..@spots.size
-    if allowed_moves.include? n and @spots[n-1]==" "
-      @spots[n-1]=colorize("X",@tt_color)
-      self.display_grid()
-      sleep(0.5)
-      @spots[n-1]="X"
-      self.display_grid()
+    move_index=n-1
+    if allowed_moves.include? n and @spots[move_index]==" "
+      animate_placement("X", @tt_color, move_index)
       self.num_moves+=1
       true
-    elsif allowed_moves.include? n and @spots[n-1]!=" "
+    elsif allowed_moves.include? n and @spots[move_index]!=" "
       msg "That square is taken"
       false
     else
@@ -75,12 +79,8 @@ Enter a number between 1 and 9.
   
   def computer_move()
     return if self.winner?() or @num_moves==9
-    computer_choice=@ai.move(@spots)
-    @spots[computer_choice]=colorize("O",@ai.color)
-    self.display_grid()
-    sleep(0.5)
-    @spots[computer_choice]="O"
-    self.display_grid(true)
+    computer_move_index=@ai.move(@spots)
+    animate_placement("O", @ai.color, computer_move_index, true)
     self.num_moves+=1
   end
   
