@@ -28,9 +28,7 @@ class Ticky
   
   def move(grid)
     @cells.sort_by{rand}.each do |cell|
-      if grid[cell-1]==" "
-        return cell-1
-      end
+      return cell-1 if grid[cell-1]==" "
     end
   end
   

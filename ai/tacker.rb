@@ -30,7 +30,6 @@ class Tacker
       @two_of_threes << [(combo[1]+combo[2]),combo[0].to_i]
       @two_of_threes << [(combo[0]+combo[2]),combo[1].to_i]
     end
-    @two_of_threes
   end
   
   attr_reader :name, :color, :taunt, :victory_taunt, :face
@@ -40,56 +39,41 @@ class Tacker
     # http://en.wikipedia.org/wiki/Tic-tac-toe
     @empty_side=empty_side(grid)
     @empty_corner=empty_corner(grid)
-    #1. WIN
-      third_in_a_row=find_third_in_a_row(grid,"O")
-      if third_in_a_row
-        return third_in_a_row
-      end
-    #2. BLOCK
-      third_in_a_row=find_third_in_a_row(grid,"X")
-      if third_in_a_row
-        return third_in_a_row
-      end
-    #4. BLOCK OPPONENT'S FORK
-      if grid[4]=="O"
-        if (grid[0]=="X" and grid[8]=="X") or (grid[2]=="X" and grid[6]=="X")
-          return @empty_side if @empty_side
-        end 
-      end
-    #5. CENTER
-      if grid[4]==" "
-        return 4
-      end
-    #6. OPPOSITE CORNER
-      if grid[0]=="X" and grid[8]==" "
-        return 8
-      elsif grid[8]=="X" and grid[0]==" "
-        return 0
-      elsif grid[2]=="X" and grid[6]==" "
-        return 6
-      elsif grid[6]=="X" and grid[2]==" "
-        return 2
-      end
-    #7. EMPTY CORNER
-      return @empty_corner if @empty_corner
-    #8. EMPTY SIDE
-      return @empty_side if @empty_side
+    # WIN
+    third_in_a_row=find_third_in_a_row(grid,"O")
+    return third_in_a_row if third_in_a_row
+    # BLOCK
+    third_in_a_row=find_third_in_a_row(grid,"X")
+    return third_in_a_row if third_in_a_row
+    # BLOCK OPPONENT'S FORK
+    if grid[4]=="O"
+      if (grid[0]=="X" and grid[8]=="X") or (grid[2]=="X" and grid[6]=="X")
+        return @empty_side if @empty_side
+      end 
+    end
+    # CENTER
+    return 4 if grid[4]==" "
+    # OPPOSITE CORNER
+    return 8 if grid[0]=="X" and grid[8]==" "
+    return 0 if grid[8]=="X" and grid[0]==" "
+    return 6 if grid[2]=="X" and grid[6]==" "
+    return 2 if grid[6]=="X" and grid[2]==" "
+    # EMPTY CORNER
+    return @empty_corner if @empty_corner
+    # EMPTY SIDE
+    return @empty_side if @empty_side
   end
   
   def empty_side(grid)
     [2,4,6,8].sort_by{rand}.each do |side|
-      if grid[side-1]==" "
-        return side-1
-      end
+      return side-1 if grid[side-1]==" "
     end
     false
   end
   
   def empty_corner(grid)
     [1,3,7,9].sort_by{rand}.each do |corner|
-      if grid[corner-1]==" "
-        return corner-1
-      end
+      return corner-1 if grid[corner-1]==" "
     end
     false
   end
