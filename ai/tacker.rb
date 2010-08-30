@@ -9,7 +9,6 @@ class Tacker
       \ (") /
        \___/
 =end
-
   def initialize()
     @name="Tacker"
     @color=31 #red
@@ -45,6 +44,19 @@ class Tacker
     # BLOCK
     third_in_a_row=find_third_in_a_row(grid,"X")
     return third_in_a_row if third_in_a_row
+    # FORK
+    if grid[4]=="O"
+      if (grid[3]=="X" and grid[5]=="X") or (grid[1]=="X" and grid[7]=="X")
+        if @empty_side
+          return @empty_side 
+        elsif grid[0]==" " and grid[2]==" " and grid[6]==" " and grid[8]==" "
+          return [0,2].sort_by{rand}[0] if grid[1]=="O"
+          return [0,6].sort_by{rand}[0] if grid[3]=="O"
+          return [6,8].sort_by{rand}[0] if grid[7]=="O"
+          return [2,8].sort_by{rand}[0] if grid[5]=="O"
+        end
+      end
+    end
     # BLOCK OPPONENT'S FORK
     if grid[4]=="O"
       if (grid[0]=="X" and grid[8]=="X") or (grid[2]=="X" and grid[6]=="X")
