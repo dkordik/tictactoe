@@ -43,7 +43,7 @@ Enter a number between 1 and 9.
     matrix_type "     YOUR OPPONENT IS #{@ai.name}"
     sleep(1.5)
     print "\n\n\n"
-    matrix_type "    [#{@ai.name.upcase}]: #{colorize(@ai.taunt,@ai.color)}"
+    matrix_type "    " + bot_dialog(@ai.taunt)
     sleep(3)
   end
   
@@ -109,9 +109,13 @@ Enter a number between 1 and 9.
     if @spots[self.winner?()[0]]==colorize("X",@win_color)
       print colorize("You WON! ",@win_color)
     else
-      print "[#{@ai.name.upcase}]: #{colorize(@ai.victory_taunt,@ai.color)}\n\n"
+      print bot_dialog(@ai.victory_taunt)+"\n\n"
       print "You lost. "
     end
+  end
+  
+  def bot_dialog(dialog)
+    "[#{@ai.name.upcase}]: " + colorize(dialog,@ai.color)
   end
   
   def display_draw()
